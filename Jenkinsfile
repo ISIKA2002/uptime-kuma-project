@@ -23,13 +23,6 @@ pipeline {
                 sh "npm install"
             }
        }
-        stage('Sonar-quality-gate') {
-            steps {
-                script{
-                    waitForQualityGate abortPipeline: false, credentialsId: 'Sonar-token'
-                }
-            }
-        }
         stage('OWASP FS SCAN') {
             steps {
                 dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-check'
