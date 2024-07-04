@@ -18,30 +18,22 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/ISIKA2002/uptime-kuma-project.git'
             }
         }
-        stage('Install Dependencies') {
+       stage('Install Dependencies') {
             steps {
                 sh "npm install"
             }
         }
-        stage("Sonarqube Analysis") {
-            steps {
+        stage("Sonarqube Analysis "){
+            steps{
                 withSonarQubeEnv('sonar-server') {
-                    withCredentials([string(credentialsId: 'Sonar-token', variable: 'SONAR_TOKEN')]) {
-                        sh """
-                        ${SCANNER_HOME}/bin/sonar-scanner -X \
-                        -Dsonar.projectName=uptime \
-                        -Dsonar.projectKey=uptime \
-                        -Dsonar.sources=. \
-                        -Dsonar.host.url=http://52.3.248.202:9000 \
-                        -Dsonar.login=${SONAR_TOKEN}
-                        """
-                    }
+                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Chatbot \
+                    -Dsonar.projectKey=Chatbot '''
                 }
             }
         }
         stage('Sonar-quality-gate') {
             steps {
-                script {
+                script{
                     waitForQualityGate abortPipeline: false, credentialsId: 'Sonar-token'
                 }
             }
